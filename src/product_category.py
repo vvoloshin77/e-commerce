@@ -33,7 +33,7 @@ class Category:
         Category.category_count += 1
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     with open(
         r"C:\Users\usger\PycharmProjects\e_commerce\data\products.json",
         "r",

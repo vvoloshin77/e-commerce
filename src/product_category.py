@@ -1,5 +1,7 @@
 import json
 
+#from mypy.types import AnyType
+
 
 class Product:
     """Класс содержащий информацию о продукте"""
@@ -9,28 +11,47 @@ class Product:
     price: float
     quantity: int
 
-    def __init__(self, name: str, description: str, price: float, quantity: int) -> None:
+    def __init__(
+        self, name: str, description: str, price: float, quantity: int
+    ) -> None:
         self.name = name
         self.description = description
-        self.price = price
+        self.__price = price
         self.quantity = quantity
 
+    @property
+    def price(self) -> float:
+        return self.__price
+
+    @price.setter
+    def price(self, new_price) -> None:
+        if new_price <= 0:
+            print("Цена не должна быть нулевая или отрицательная")
+            return
+
+        if new_price < self.__price:
+            message = input("Цена ниже предыдущей. Подтвердить изменения ? y/n: ")
+            if message.lower() != "y":
+                print("Корректировка цены отменена")
+                return
+        self.__price = new_price
+
     @classmethod
-    def new_product(cls, prod_dic: dict, products_list: list):
+    def new_product(cls, prod_dic: dict, products_list: list) -> None:
         """Класс-метод сравнивающий товары по названию и складывающий остатки вместе, устанавливаю большую цену"""
         for product in products_list:
-            if product.name == prod_dic['name']:
-                product.quantity += prod_dic['quantity']
+            if product.name == prod_dic["name"]:
+                product.quantity += prod_dic["quantity"]
 
-                if prod_dic['price'] > product.price:
-                    product.price = prod_dic['price']
+                if prod_dic["price"] > product.price:
+                    product.price = prod_dic["price"]
                 return product
 
         return cls(
-            prod_dic['name'],
-            prod_dic['description'],
-            prod_dic['price'],
-            prod_dic['quantity']
+            prod_dic["name"],
+            prod_dic["description"],
+            prod_dic["price"],
+            prod_dic["quantity"],
         )
 
 
@@ -50,18 +71,29 @@ class Category:
         Category.products_count += len(self.__products)
         Category.category_count += 1
 
-    def add_product(self, product: Product):
+    def add_product(self, product: Product) -> None:
         self.__products.append(product)
         Category.products_count += 1
 
     @property
-    def products(self):
-        product_str = ''
+    def products(self) -> None:
+        products_str = ""
         for product in self.__products:
-            product_str += f'\n{product.name}, {product.price} руб. Остаток: {product.quantity} шт.\n'
-        return product_str
+            products_str += f"\n{product.name}, {product.price} руб. Остаток: {product.quantity} шт.\n"
+        return products_str
 
-if __name__ == "__main__": # pragma: no cover
+    # @property
+    # def products(self):
+    #     return self.__products
+
+    # def products_str(self):
+    #     result = ""
+    #     for product in self.__products:
+    #         result += f"\n{product.name}, {product.price} руб. Остаток: {product.quantity} шт.\n"
+    #     return result
+
+
+if __name__ == "__main__":  # pragma: no cover
     with open(
         r"C:\Users\usger\PycharmProjects\e_commerce\data\products.json",
         "r",

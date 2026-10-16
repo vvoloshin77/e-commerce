@@ -1,19 +1,14 @@
 import json
 
-#from mypy.types import AnyType
-
 
 class Product:
     """Класс содержащий информацию о продукте"""
 
     name: str
     description: str
-    price: float
     quantity: int
 
-    def __init__(
-        self, name: str, description: str, price: float, quantity: int
-    ) -> None:
+    def __init__(self, name: str, description: str, price: float, quantity: int) -> None:
         self.name = name
         self.description = description
         self.__price = price
@@ -24,7 +19,7 @@ class Product:
         return self.__price
 
     @price.setter
-    def price(self, new_price) -> None:
+    def price(self, new_price: float) -> None:
         if new_price <= 0:
             print("Цена не должна быть нулевая или отрицательная")
             return
@@ -37,15 +32,15 @@ class Product:
         self.__price = new_price
 
     @classmethod
-    def new_product(cls, prod_dic: dict, products_list: list) -> None:
+    def new_product(cls, prod_dic: dict, products_list: list["Product"]) -> "Product":
         """Класс-метод сравнивающий товары по названию и складывающий остатки вместе, устанавливаю большую цену"""
-        for product in products_list:
-            if product.name == prod_dic["name"]:
-                product.quantity += prod_dic["quantity"]
+        for prod in products_list:
+            if prod.name == prod_dic["name"]:
+                prod.quantity += prod_dic["quantity"]
 
-                if prod_dic["price"] > product.price:
-                    product.price = prod_dic["price"]
-                return product
+                if prod_dic["price"] > prod.price:
+                    prod.price = prod_dic["price"]
+                return prod
 
         return cls(
             prod_dic["name"],
@@ -60,7 +55,6 @@ class Category:
 
     name: str
     description: str
-    products: list
     products_count = 0
     category_count = 0
 
@@ -76,21 +70,11 @@ class Category:
         Category.products_count += 1
 
     @property
-    def products(self) -> None:
+    def products(self) -> str:
         products_str = ""
-        for product in self.__products:
-            products_str += f"\n{product.name}, {product.price} руб. Остаток: {product.quantity} шт.\n"
+        for pr in self.__products:
+            products_str += f"\n{pr.name}, {pr.price} руб. Остаток: {pr.quantity} шт.\n"
         return products_str
-
-    # @property
-    # def products(self):
-    #     return self.__products
-
-    # def products_str(self):
-    #     result = ""
-    #     for product in self.__products:
-    #         result += f"\n{product.name}, {product.price} руб. Остаток: {product.quantity} шт.\n"
-    #     return result
 
 
 if __name__ == "__main__":  # pragma: no cover
@@ -111,9 +95,7 @@ if __name__ == "__main__":  # pragma: no cover
                 product_data["quantity"],
             )
             products.append(product)
-        category = Category(
-            category_data["name"], category_data["description"], products
-        )
+        category = Category(category_data["name"], category_data["description"], products)
         categories.append(category)
 
         print(product.name)

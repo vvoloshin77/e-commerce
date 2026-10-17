@@ -26,11 +26,8 @@ dev = [
     "pytest-cov (>=7.0.0,<8.0.0)"
 ]
 
-[tool.flake8]
-max-line-length = 119
-
 [tool.black]
-max-line-length = 119
+line-length = 119
 exclude = '.git'
 
 [tool.mypy]

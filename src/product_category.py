@@ -17,6 +17,9 @@ class Product:
     def __str__(self) -> str:
         return f'{self.name}, {self.__price:g} руб. Остаток: {self.quantity} шт.'
 
+    def __add__(self, other: 'Product') -> float:
+        return (self.__price * self.quantity) + (other.__price * other.quantity)
+
     @property
     def price(self) -> float:
         return self.__price

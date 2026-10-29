@@ -14,6 +14,9 @@ class Product:
         self.__price = price
         self.quantity = quantity
 
+    def __str__(self) -> str:
+        return f'{self.name}, {self.__price:g} руб. Остаток: {self.quantity} шт.'
+
     @property
     def price(self) -> float:
         return self.__price
@@ -58,21 +61,25 @@ class Category:
     products_count = 0
     category_count = 0
 
-    def __init__(self, name: str, description: str, products: list) -> None:
+    def __init__(self, name: str, description: str, prod: list) -> None:
         self.name = name
         self.description = description
-        self.__products = products
-        Category.products_count += len(self.__products)
+        self.__prod = prod
+        Category.products_count += len(self.__prod)
         Category.category_count += 1
 
-    def add_product(self, product: Product) -> None:
-        self.__products.append(product)
+    def __str__(self) -> str:
+        total_quantity = sum(prod.quantity for prod in self.__prod)
+        return f'{self.name}, количество продуктов: {total_quantity} шт.'
+
+    def add_product(self, prod: Product) -> None:
+        self.__prod.append(prod)
         Category.products_count += 1
 
     @property
     def products(self) -> str:
         products_str = ""
-        for pr in self.__products:
+        for pr in self.__prod:
             products_str += f"\n{pr.name}, {pr.price} руб. Остаток: {pr.quantity} шт.\n"
         return products_str
 

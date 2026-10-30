@@ -83,7 +83,7 @@ class Category:
     def products(self) -> str:
         products_str = ""
         for pr in self.__prod:
-            products_str += f"\n{pr.name}, {pr.price} руб. Остаток: {pr.quantity} шт.\n"
+            products_str += f"{str(pr)}\n"
         return products_str
 
 
@@ -105,13 +105,14 @@ if __name__ == "__main__":  # pragma: no cover
                 product_data["quantity"],
             )
             products.append(product)
+
+            print(product.name)
+            print(product.description)
+            print(product.price)
+            print(product.quantity)
+
         category = Category(category_data["name"], category_data["description"], products)
         categories.append(category)
-
-        print(product.name)
-        print(product.description)
-        print(product.price)
-        print(product.quantity)
 
         print(category.name)
         print(category.description)

@@ -1,5 +1,6 @@
 import pytest
 
+from src.cat_iterator import CategoryIterator
 from src.product_category import Category, Product
 
 
@@ -89,7 +90,7 @@ def test_add_product(categories_smart: Category, products_smart: Product) -> Non
     categories_smart.add_product(products_smart)
     assert Category.products_count == 1
     assert "Смартфоны" in categories_smart.products
-    assert "180000.0 руб." in categories_smart.products
+    assert "180000 руб." in categories_smart.products
     assert "Остаток: 5 шт." in categories_smart.products
 
 
@@ -151,3 +152,29 @@ def test_new_product_higher_price() -> None:
     assert product.quantity == 20
     assert len(pr_list) == 1
     assert product is pr_list[0]
+
+
+def test_product_add() -> None:
+    pr_1 = Product('Pineapple', 'dzaan gemrieli', 60.60, 800)
+    pr_2 = Product('Kombosto', 'sashineli', 9.90, 4)
+    assert (pr_1 + pr_2) == 48519.6
+
+
+def test_product_str(products_smart: Product) -> None:
+    exp = 'Смартфоны, 180000 руб. Остаток: 5 шт.'
+    assert str(products_smart) == exp
+
+
+def test_category_str(categories_smart: Category, products_smart: Product) -> None:
+    categories_smart.add_product(products_smart)
+    exp = 'Iphone 15, количество продуктов: 5 шт.'
+    assert str(categories_smart) == exp
+
+
+def test_category_iterator(categories_smart: Category, products_smart: Product) -> None:
+    categories_smart.add_product(products_smart)
+    iterator = CategoryIterator(categories_smart)
+    assert iter(iterator) == iterator
+    assert next(iterator) == products_smart
+    with pytest.raises(StopIteration):
+        next(iterator)

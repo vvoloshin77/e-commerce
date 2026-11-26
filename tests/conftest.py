@@ -1,6 +1,8 @@
 import pytest
 
+from src.lawngrass import LawnGrass
 from src.product_category import Category, Product
+from src.smartphone import Smartphone
 
 
 @pytest.fixture(autouse=True)
@@ -23,3 +25,13 @@ def products_smart() -> Product:
 @pytest.fixture()
 def categories_smart() -> Category:
     return Category("Iphone 15", "512GB, Gray space", [])
+
+
+@pytest.fixture
+def smartphone() -> Smartphone:
+    return Smartphone("iphone", "piece", 900, 4, "vg", "good", "256GB", "sky")
+
+
+@pytest.fixture
+def lawn_grass() -> LawnGrass:
+    return LawnGrass("ork", "good ork", 7000, 99, "Australia", 6.7, "burgundy")

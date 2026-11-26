@@ -1,7 +1,9 @@
 import pytest
 
 from src.cat_iterator import CategoryIterator
+from src.lawngrass import LawnGrass
 from src.product_category import Category, Product
+from src.smartphone import Smartphone
 
 
 def test_product_init(products_smart: Product) -> None:
@@ -155,19 +157,19 @@ def test_new_product_higher_price() -> None:
 
 
 def test_product_add() -> None:
-    pr_1 = Product('Pineapple', 'dzaan gemrieli', 60.60, 800)
-    pr_2 = Product('Kombosto', 'sashineli', 9.90, 4)
+    pr_1 = Product("Pineapple", "dzaan gemrieli", 60.60, 800)
+    pr_2 = Product("Kombosto", "sashineli", 9.90, 4)
     assert (pr_1 + pr_2) == 48519.6
 
 
 def test_product_str(products_smart: Product) -> None:
-    exp = 'Смартфоны, 180000 руб. Остаток: 5 шт.'
+    exp = "Смартфоны, 180000 руб. Остаток: 5 шт."
     assert str(products_smart) == exp
 
 
 def test_category_str(categories_smart: Category, products_smart: Product) -> None:
     categories_smart.add_product(products_smart)
-    exp = 'Iphone 15, количество продуктов: 5 шт.'
+    exp = "Iphone 15, количество продуктов: 5 шт."
     assert str(categories_smart) == exp
 
 
@@ -178,3 +180,34 @@ def test_category_iterator(categories_smart: Category, products_smart: Product) 
     assert next(iterator) == products_smart
     with pytest.raises(StopIteration):
         next(iterator)
+
+
+def test_add_different_classes(smartphone: Smartphone, lawn_grass: LawnGrass) -> None:
+    with pytest.raises(TypeError, match="только товары одного класса"):
+        smartphone + lawn_grass
+
+
+def test_add_product_wrong_type(categories_smart: Category) -> None:
+    with pytest.raises(TypeError, match="только объекты Product и его наследников"):
+        categories_smart.add_product("строка")  # type: ignore[arg-type]
+    assert Category.products_count == 0
+
+
+def test_add_smartphone(smartphone: Smartphone, categories_smart: Category) -> None:
+    assert Category.products_count == 0
+    categories_smart.add_product(smartphone)
+    assert Category.products_count == 1
+    assert "iphone" in categories_smart.products
+    assert "900 руб." in categories_smart.products
+    assert "Остаток: 4 шт." in categories_smart.products
+    # assert smartphone.name in categories_smart.products
+
+
+def test_add_smartphone_and_product(smartphone: Smartphone, products_smart: Product) -> None:
+    with pytest.raises(TypeError, match="только товары одного класса"):
+        smartphone + products_smart
+
+
+def test_add_smartphone_and_smartphone(smartphone: Smartphone) -> None:
+    sm = Smartphone("Смартфоны", "Супер", 50505, 990, "vg", "iphone", "256GB", "sky")
+    assert smartphone + sm == 900 * 4 + 50505 * 990

@@ -1,16 +1,17 @@
-from src.product_category import Product, Category
-import json
+from src.product_category import Category, Product
+
 
 class CategoryIterator:
-    def __init__(self, category_obj):
-        self.category = category_obj
+
+    def __init__(self, category_obj: Category) -> None:
+        self.category_obj = category_obj
         self.index = 0
 
-    def __iter__(self):
+    def __iter__(self) -> "CategoryIterator":
         return self
 
-    def __next__(self):
-        products_list = self.category._Category__prod
+    def __next__(self) -> Product:
+        products_list = self.category_obj.product_list
         if self.index < len(products_list):
             lst = products_list[self.index]
             self.index += 1

@@ -1,12 +1,5 @@
-import json
-
-
 class Product:
     """Класс содержащий информацию о продукте"""
-
-    name: str
-    description: str
-    quantity: int
 
     def __init__(self, name: str, description: str, price: float, quantity: int) -> None:
         self.name = name
@@ -15,10 +8,13 @@ class Product:
         self.quantity = quantity
 
     def __str__(self) -> str:
-        return f'{self.name}, {self.__price:g} руб. Остаток: {self.quantity} шт.'
+        return f"{self.name}, {self.__price:g} руб. Остаток: {self.quantity} шт."
 
-    def __add__(self, other: 'Product') -> float:
-        return (self.__price * self.quantity) + (other.__price * other.quantity)
+    def __add__(self, other: "Product") -> float:
+        if type(other) is type(self):
+            return (self.__price * self.quantity) + (other.__price * other.quantity)
+        else:
+            raise TypeError("Складывать можно только товары одного класса")
 
     @property
     def price(self) -> float:
@@ -59,8 +55,6 @@ class Product:
 class Category:
     """Класс содержащий информацию о категории"""
 
-    name: str
-    description: str
     products_count = 0
     category_count = 0
 
@@ -73,11 +67,14 @@ class Category:
 
     def __str__(self) -> str:
         total_quantity = sum(prod.quantity for prod in self.__prod)
-        return f'{self.name}, количество продуктов: {total_quantity} шт.'
+        return f"{self.name}, количество продуктов: {total_quantity} шт."
 
     def add_product(self, prod: Product) -> None:
-        self.__prod.append(prod)
-        Category.products_count += 1
+        if isinstance(prod, Product):
+            self.__prod.append(prod)
+            Category.products_count += 1
+        else:
+            raise TypeError("Можно добавлять только объекты Product и его наследников")
 
     @property
     def products(self) -> str:
@@ -85,6 +82,10 @@ class Category:
         for pr in self.__prod:
             products_str += f"{str(pr)}\n"
         return products_str
+
+    @property
+    def product_list(self) -> list[Product]:
+        return self.__prod
 
 
 # if __name__ == "__main__":  # pragma: no cover

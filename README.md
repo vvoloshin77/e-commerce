@@ -59,6 +59,12 @@
 #### 4. `CategoryIterator` (Итератор)
 Перебирает товары категории по одному. Реализует протокол итерации (`__iter__` и `__next__`), поэтому его можно использовать в цикле `for`.
 
+#### 5. `BaseProduct` (Абстрактный базовый класс)
+Родительский класс для всех продуктов (`ABC`). Описывает общий набор полей (`name`, `description`, `quantity`) и абстрактные методы, которые обязан реализовать каждый продукт: `__str__`, `__add__`, `new_product()` и свойство `price`. Создать объект `BaseProduct` напрямую нельзя.
+
+#### 6. `PrintMixin` (Класс-миксин)
+Подключён в цепочку наследования `Product`. При создании любого продукта, в том числе `Smartphone` и `LawnGrass`, печатает в консоль, от какого класса и с какими параметрами создан объект, например: `Product('Iphone 15', '512GB, Gray space', 210000.0, 8)`.
+
 ---
 
 ## 🚀 Установка и запуск
@@ -80,6 +86,8 @@
    ```bash
    poetry run python src/main.py
    ```
+
+Также тесты проверяют вывод миксина при создании объекта и запрет на создание экземпляра абстрактного класса `BaseProduct`.
 
 ---
 
@@ -115,6 +123,8 @@ e-commerce/
 ├── htmlcov/                     # HTML-отчёт о покрытии
 ├── src/
 │   ├── __init__.py
+│   ├── base_product.py          # Абстрактный класс BaseProduct
+│   ├── print_mixin.py           # Класс-миксин PrintMixin
 │   ├── product_category.py      # Классы Product и Category
 │   ├── smartphone.py            # Класс Smartphone
 │   ├── lawngrass.py             # Класс LawnGrass
@@ -125,6 +135,8 @@ e-commerce/
 │   ├── conftest.py              # Фикстуры
 │   ├── test_product_category.py # Тесты Product, Category, итератора
 │   ├── test_smartphone.py       # Тесты Smartphone
+│   ├── test_print_mixin.py      # Тесты PrintMixin
+│   ├── test_base_product.py     # Тесты BaseProduct
 │   └── test_lawngrass.py        # Тесты LawnGrass
 ├── pyproject.toml
 └── README.md

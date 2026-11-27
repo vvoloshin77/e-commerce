@@ -23,9 +23,10 @@ def test_price_setter_negative(capsys: pytest.CaptureFixture[str]) -> None:
         210000.0,
         6,
     )
+    # capsys.readouterr()
     pr.price = -180000.0
     message = capsys.readouterr()
-    assert message.out.strip() == "Цена не должна быть нулевая или отрицательная"
+    assert message.out.strip().split("\n")[-1] == "Цена не должна быть нулевая или отрицательная"
     assert pr.price == 210000.0
 
 
@@ -36,10 +37,11 @@ def test_price_decrease_cancel(monkeypatch: pytest.MonkeyPatch, capsys: pytest.C
         210000.0,
         5,
     )
+    # capsys.readouterr()
     monkeypatch.setattr("builtins.input", lambda _: "n")
     pr.price = 180000.0
     message = capsys.readouterr()
-    assert message.out.strip() == "Корректировка цены отменена"
+    assert message.out.strip().split("\n")[-1] == "Корректировка цены отменена"
     assert pr.price == 210000.0
 
 
